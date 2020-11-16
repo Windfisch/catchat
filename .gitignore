@@ -1,0 +1,5 @@
+private.py
+*.pyc
+__pycache__
+*.session
+*.session-journal

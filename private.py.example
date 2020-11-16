@@ -1,0 +1,6 @@
+# go to https://my.telegram.org/apps and create a new app.
+# then fill the api_id and api_hash below. these information
+# is confidential, do not share it with others!
+
+api_id = '1234567'
+api_hash = 'deadbeefbaadf00d0123456789abcdef'
