@@ -9,16 +9,22 @@ inp = open('x.jpg', 'rb').read()
 secrettext = bytes("Hallo Welt! das ist geheim!", 'ascii')
 #secrettext = bytes([0xff, 0] * 100)
 
-outbuf = c_void_p()
-outsize = c_ulong()
-result = manipulate(inp, c_ulong(len(inp)), byref(outbuf), byref(outsize), secrettext, len(secrettext))
+def encode(carrier_jpeg_bytes, secrettext):
+	outbuf = c_void_p()
+	outsize = c_ulong()
+	manipulate(inp, c_ulong(len(inp)), byref(outbuf), byref(outsize), secrettext, len(secrettext))
+	result = bytes(outsize.value)
+	memmove(result, outbuf, outsize)
 
-out = bytes(outsize.value)
-memmove(out, outbuf, outsize)
+	return result
 
+def decode(carrier_jpeg_bytes):
+	outbuf = c_void_p()
+	outsize = c_ulong()
+	manipulate(carrier_jpeg_bytes, c_ulong(len(carrier_jpeg_bytes)), byref(outbuf), byref(outsize), c_char_p(0), c_ulong(0))
+	recovered = bytes(outsize.value)
+	memmove(recovered, outbuf, outsize)
+	return recovered
 
-
-manipulate(out, c_ulong(len(out)), byref(outbuf), byref(outsize), c_char_p(0), c_ulong(0))
-
-recovered = bytes(outsize.value)
-memmove(recovered, outbuf, outsize)
+encoded_image = encode(inp, secrettext)
+recovered = decode(encoded_image)
