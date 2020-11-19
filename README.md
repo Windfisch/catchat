@@ -70,6 +70,34 @@ Telegram will automatically lower the quality of your image
 otherwise, destroying the least significant bits of the DCT
 coefficients which we encode our information in.
 
+How does it work?
+-----------------
+
+JPEG compresses images using the
+[Discrete Cosine Transform](https://en.wikipedia.org/wiki/Discrete_cosine_transform)
+on 8x8 px blocks of the image. It then reduces the precision of those
+coefficients which are likely to be not noticeable anyway, leading to
+a large number of coefficients being rounded to zero. Most of the actual
+compression is achieved by simply not storing all these zeros.
+
+This steganography algorithm performs a selection of these coefficients
+(namely it uses, from each block, the last coefficient that is >32).
+It then overwrites the least significant bit of this coefficient with 
+one bit of the payload. Decoding works the other way round.
+
+(Using only one coefficient per block is the main issue for the message
+length being limited. Also, a better scheme would retain the distribution
+of zero and one bits, see Security below.)
+
+Limitations
+-----------
+
+No message backlog is supported. The UI sucks, deal with it. The texts
+that can be hidden in a JPEG are laughably short, sorry. See below on
+how a sensible steganography algorithm should be used.
+
+Pull requests / forks are welcome.
+
 Notes on security
 -----------------
 
