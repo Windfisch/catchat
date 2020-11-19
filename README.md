@@ -6,7 +6,10 @@ encrypted messengers, the danger of secure encryption being banned is imminent.
 
 Privacy is a right we are not willing to give away, and with **CatChat** we can
 continue to use encryption without being detected (see the Security hints below)
-by hiding our encrypted messages in EU-backdoored chat protocols.
+by hiding our encrypted messages in EU-backdoored chat protocols. **CatChat**
+uses the *Telegram* chat service which is known for its excellent encryption
+capabilities as transport and adds on top *bleeding edge steganography*
+technology (see the Security hints below).
 
 We chose to use JPEG files to hide our messages in, because they are supported
 by most chat services, they offer enough space to fit a text message, and most
