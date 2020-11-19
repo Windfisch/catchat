@@ -10,16 +10,17 @@ import nacl.secret
 import nacl.utils
 import base64
 
+import os
+import random
+
+def random_cat_pic():
+	return "pics/" + random.choice(os.listdir('pics'))
+
 def decrypt(secretbox, ciphertext):
-	print (len(ciphertext))
 	for i in range(len(ciphertext)-1, -1, -1):
-		print(i)
 		try:
 			return secretbox.decrypt(ciphertext[0:i])
 		except Exception as e:
-			if i==49:
-				print("wat")
-				print(e)
 			pass
 	raise RuntimeError("failed to decrypt :(")
 
@@ -51,26 +52,19 @@ async def main(tg, secretbox):
 		if (event.chat_id == did):
 			if event.message.photo:
 				try:
-					print("got image!")
 					media = await event.message.download_media(file=bytes)
-					print("image has length %i" % len(media))
 					open("/tmp/recv.jpeg", 'wb').write(media)
-					print("wrote image")
-					print(decode_jpeg(media))
-					print("---")
-					print(decode_str(decrypt(secretbox, decode_jpeg(media))))
-					print("decrypted image")
+					print(">>> %s" % decode_str(decrypt(secretbox, decode_jpeg(media))))
 				except Exception as e:
 					print(e)
 			else:
-				print("<<< message not understood.")
+				print(">>> message not understood.")
 
 
 	while True:
 		message = await ainput("Your message: ")
-		bs = open("/home/flo/meow2.jpg", mode='rb').read()
+		bs = open(random_cat_pic(), mode='rb').read()
 		secrettext = secretbox.encrypt(encode_str(message))
-		print(len(secrettext))
 		bs = encode_jpeg(bs, secrettext)
 		await tg.send_file(dialog.entity, bs)
 
