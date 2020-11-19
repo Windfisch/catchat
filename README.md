@@ -18,7 +18,7 @@ your friends. Who needs words anyway if you can have cat pictures?!
 
 ![cat](pics/briciola.jpg)
 
-(see Credits below)
+(Example of a hidden chat message. See Credits below.)
 
 Dependencies
 ------------
@@ -37,6 +37,8 @@ and create `private.py` with your own API token.
 
 Running
 -------
+
+Launch the program using `python client.py`.
 
 When asked for the key (or to generate one), press the Enter key
 and save the generated key somewhere. You and your chat partner

@@ -1,2 +1,7 @@
-libdct.so: dct.c
-	gcc -fPIC -shared -rdynamic  -ljpeg dct.c -o libdct.so
+libdct.so: dct.o
+	gcc -shared dct.o  -ljpeg -o libdct.so
+
+dct.o: dct.c
+	gcc -fPIC -c dct.c
+
+
