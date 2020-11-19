@@ -19,15 +19,18 @@
 
 JCOEF* carrier_coef(JCOEF* block)
 {
-    int i;
-    for (i = DCTSIZE2; i-->0;)
+    int found = -1;
+    for (int i = DCTSIZE2; i-->1+2+3+4+5+6+7;)
     {
         if (block[i] & ~((1<<MIN_BITS)-1))
+        {
+            found = i;
             break;
+        }
     }
-    if (i>=0 && i < DCTSIZE2)
+    if (found != -1)
     {
-        return &block[i];
+        return &block[found];
     }
     else
     {
@@ -133,7 +136,7 @@ void manipulate_jpeg(const unsigned char* inbuffer, unsigned long insize, unsign
   }
   else // encode
   {
-  int counter = 0;
+  int counter = 0, ones = 0;
       struct jpeg_compress_struct outputinfo;
       outputinfo.err = jpeg_std_error(&jerr);
       jpeg_create_compress(&outputinfo);
@@ -153,6 +156,9 @@ void manipulate_jpeg(const unsigned char* inbuffer, unsigned long insize, unsign
                 if (coef)
                 {
                     counter++;
+                    if ((*coef) & 2)
+                        ones++;
+
                     if (input_bytepos < textsize)
                     {
                         int bit = (text[input_bytepos] & input_bitmask) != 0;
@@ -172,7 +178,7 @@ void manipulate_jpeg(const unsigned char* inbuffer, unsigned long insize, unsign
         }
       }
 
-        printf("wrote to %i possible bit locations", counter);
+        printf("wrote to %i possible bit locations, got %i ones", counter, ones);
 
       /* Output the new DCT coeffs to a JPEG file */
       for (compnum=0; compnum<num_components; compnum++)
