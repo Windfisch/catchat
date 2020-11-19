@@ -54,6 +54,7 @@ async def main(tg, secretbox):
 				try:
 					media = await event.message.download_media(file=bytes)
 					open("/tmp/recv.jpeg", 'wb').write(media)
+					print("received %i bytes" % len(media))
 					print(">>> %s" % decode_str(decrypt(secretbox, decode_jpeg(media))))
 				except Exception as e:
 					print(e)
@@ -66,6 +67,7 @@ async def main(tg, secretbox):
 		bs = open(random_cat_pic(), mode='rb').read()
 		secrettext = secretbox.encrypt(encode_str(message))
 		bs = encode_jpeg(bs, secrettext)
+		print ("sent %i bytes" % len(bs))
 		await tg.send_file(dialog.entity, bs)
 
 key = input("Enter your key (press enter to generate one): ")
