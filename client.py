@@ -4,6 +4,8 @@ import asyncio
 import sys
 from concurrent.futures import ThreadPoolExecutor
 
+from dct import *
+
 
 async def ainput(prompt: str = ""):
     with ThreadPoolExecutor(1, "AsyncInput", lambda x: print(x, end="", flush=True), (prompt,)) as executor:
@@ -15,7 +17,13 @@ async def ainput(prompt: str = ""):
 tg = TelegramClient('anon', api_id, api_hash)
 tg.start()
 
-async def main(tg):
+def encrypt(key, x):
+	return x # TODO
+
+def decrypt(key, x):
+	return x # TODO
+
+async def main(tg, key):
 	dialogs = await tg.get_dialogs(limit=10)
 	for (i,d) in enumerate(dialogs):
 		print("%2i) %s" % (i, d.title))
@@ -32,20 +40,33 @@ async def main(tg):
 		print(event.chat_id, did)
 		if (event.chat_id == did):
 			if event.message.photo:
+				print("got image!")
 				media = await event.message.download_media(file=bytes)
-				message
-				print(media)
+				print("image has length %i" % len(media))
+				open("/tmp/recv.jpeg", 'wb').write(media)
+				print("wrote image")
+				print(decode_jpeg(media))
+				print("---")
+				print(decode_str(decrypt(key, decode_jpeg(media))))
+				print("decrypted image")
 			else:
-				print("<<< message not understood: %s" % event.raw_text)
+				print("<<< message not understood.")
 
 
 	while True:
 		message = await ainput("Your message: ")
-		await dialog.send_message(message)
 		bs = open("/home/flo/cat.jpeg", mode='rb').read()
-		print(bs)
+		bs = encode_jpeg(bs, encrypt(key, encode_str(message)))
 		await tg.send_file(dialog.entity, bs)
 
-tg.loop.run_until_complete(main(tg))
+key = input("Enter your key (press enter to generate one): ")
+if key == '':
+	# TODO generate a key and print it
+	pass
+else:
+	# TODO base64-decode the key
+	pass
+
+tg.loop.run_until_complete(main(tg, key))
 
 
