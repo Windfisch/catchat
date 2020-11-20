@@ -97,7 +97,8 @@ Limitations
 
 No message backlog is supported. The UI sucks, deal with it. The texts
 that can be hidden in a JPEG are laughably short, sorry. See below on
-how a sensible steganography algorithm should be used.
+how a sensible steganography algorithm should be used. In fact, everything
+sucks, as this was hacked together in three evenings.
 
 Pull requests / forks are welcome.
 
